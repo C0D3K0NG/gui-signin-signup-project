@@ -2,23 +2,23 @@ import tkinter as tk
 from tkinter import *  #importing all from tkinter module for making gui 
 from PIL import Image,ImageTk # from Pillow module import Image and ImageTk class for importing images
 import pyglet #importing pyglet module for importing a custom font 
-
-#function part
+import pymysql
+#function part  
 def on_enter_email(a):
-  if email_entry.get() == "    Enter email address":
+  if email_entry.get() == "Enter email address":
     email_entry.delete(0,END)
     return None
 def on_back_email(a):
   if email_entry.get() == "":
-    email_entry.insert("end", "    Enter email address")
+    email_entry.insert("end", "Enter email address")
     return None
 def on_enter_pass(a):
-  if pass_entry.get() == "    Enter password":
+  if pass_entry.get() == "Enter password":
     pass_entry.delete(0,END)
     return None
 def on_back_pass(a):
   if pass_entry.get() == "":
-    pass_entry.insert("end", "    Enter password")
+    pass_entry.insert("end", "Enter password")
     return None
 
 #eye functions
@@ -30,6 +30,11 @@ def show():
   openeye.config(file='images/openeye.png')
   pass_entry.config(show='')
   eyebutton.config(command=hide)    
+
+#redirect to signup page
+def signup():
+  login_window.destroy()
+  import signup
 
 #gui part
 pyglet.font.add_file('fonts/Aladin-Regular.ttf')
@@ -60,9 +65,9 @@ email_entry = Entry(login_window,
                     width=27,
                     bd=0, 
                     font=('Alegreya', 12))
-email_entry.place(x=522, y=240)
+email_entry.place(x=522,y=240)
 
-email_entry.insert("end", "    Enter email address")
+email_entry.insert("end", "Enter email address")
 email_entry.bind('<FocusIn>',on_enter_email)
 email_entry.bind('<FocusOut>',on_back_email)
 
@@ -79,7 +84,7 @@ pass_entry=Entry(login_window,
                 font=('Alegreya',12))
 pass_entry.place(x=522,y=305)
 
-pass_entry.insert("end", "    Enter password")
+pass_entry.insert("end", "Enter password")
 pass_entry.bind('<FocusIn>',on_enter_pass)
 pass_entry.bind('<FocusOut>',on_back_pass)
 
@@ -109,13 +114,13 @@ forgot.place(x=655,y=332)
 #lOGIN BUTTON
 login=Button(login_window,
              text="Login",
-             width=22,
+             width=27,
              bd=0,
              fg='#FF4106',
               bg='#80D7DF',
               activebackground='#80D7DF',
               cursor='hand2',
-              font=('Aladin',18),
+              font=('Alegreya',13,'bold'),
               activeforeground='blue'
              )
 login.place(x=522,y=375)
@@ -124,7 +129,7 @@ orpng=PhotoImage(file='images/or label.png')
 orlabel=Label(login_window,
               image=orpng,
               bg='#D9D9D9')
-orlabel.place(x=514,y=440)
+orlabel.place(x=514,y=430)
 #google login
 google=PhotoImage(file='images/google.png')
 
@@ -174,7 +179,8 @@ create_button=Button(login_window,
               activebackground='#D9D9D9',
               cursor='hand2',
               font=('Alegreya',13,'bold underline'),
-              activeforeground='#A3A3A3'
+              activeforeground='#A3A3A3',
+              command=signup  
              )
 create_button.place(x=668,y=513)
 
