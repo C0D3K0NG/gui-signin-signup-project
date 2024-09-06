@@ -47,7 +47,7 @@ def connect_database():
       query = 'SELECT * FROM users WHERE username = %s'
       mycursor.execute(query, (username_entry.get(),))
       row = mycursor.fetchone()
-
+      
       if row:  # Username already exists
                 messagebox.showerror('Username Error', 'Username already taken')
       else:

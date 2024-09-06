@@ -2,15 +2,45 @@ import tkinter as tk
 from tkinter import *  #importing all from tkinter module for making gui 
 from PIL import Image,ImageTk # from Pillow module import Image and ImageTk class for importing images
 import pyglet #importing pyglet module for importing a custom font 
-import pymysql
+import mysql.connector
+from tkinter import messagebox
 #function part  
-def on_enter_email(a):
-  if email_entry.get() == "Enter email address":
-    email_entry.delete(0,END)
+#database connection
+def clear():
+  username_entry.delete(0,END)
+  pass_entry.delete(0,END)
+def connect_database():
+  if username_entry.get() == "" or pass_entry.get() == "":
+    messagebox.showerror('Error','Fill all the required fields')
+  else:
+    try:
+      connect=mysql.connector.connect(host='localhost',user='root',password='7896',database='userdata')
+      mycursor=connect.cursor()
+    except:
+      messagebox.showerror('Database error','Connection to database is failed')
+      return
+    try:
+      query="select password from users where username=%s"
+      mycursor.execute(query,(username_entry.get(),))
+      myresult = mycursor.fetchone()
+      for x in myresult:
+        if x == pass_entry.get():
+          messagebox.showinfo('Success','Login Successful')
+          clear()
+        else:
+          messagebox.showerror('Error','Password does not match')
+      
+    except:
+      messagebox.showerror('Error','Sign in error')
+      
+
+def on_enter_username(a):
+  if username_entry.get() == "Enter username":
+    username_entry.delete(0,END)
     return None
-def on_back_email(a):
-  if email_entry.get() == "":
-    email_entry.insert("end", "Enter email address")
+def on_back_username(a):
+  if username_entry.get() == "":
+    username_entry.insert("end", "Enter username")
     return None
 def on_enter_pass(a):
   if pass_entry.get() == "Enter password":
@@ -54,22 +84,22 @@ heading=Label(login_window,
               bg='#D9D9D9')
 heading.place(x=518,y=127)
 
-#EMAIL ADDRESS
-email_label = Label(login_window, 
-                    text="EMAIL", 
+#username ADDRESS
+username_label = Label(login_window, 
+                    text="USERNAME", 
                     bg='#D9D9D9', 
                     font=('Alegreya', 14))
-email_label.place(x=518, y=205)
+username_label.place(x=518, y=205)
 
-email_entry = Entry(login_window, 
+username_entry = Entry(login_window, 
                     width=27,
                     bd=0, 
                     font=('Alegreya', 12))
-email_entry.place(x=522,y=240)
+username_entry.place(x=522,y=240)
 
-email_entry.insert("end", "Enter email address")
-email_entry.bind('<FocusIn>',on_enter_email)
-email_entry.bind('<FocusOut>',on_back_email)
+username_entry.insert("end", "Enter username")
+username_entry.bind('<FocusIn>',on_enter_username)
+username_entry.bind('<FocusOut>',on_back_username)
 
 #PASSWORD
 password=Label(login_window,
@@ -121,7 +151,8 @@ login=Button(login_window,
               activebackground='#80D7DF',
               cursor='hand2',
               font=('Alegreya',13,'bold'),
-              activeforeground='blue'
+              activeforeground='blue',
+              command=connect_database
              )
 login.place(x=522,y=375)
 #or label
